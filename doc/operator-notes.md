@@ -14,6 +14,15 @@ Ignition will initially wait 100 milliseconds between failed attempts, and the a
 
 Ignition has support for fetching files over the S3 protocol. When Ignition is running in Amazon EC2, it supports using the IAM role given to the EC2 instance to fetch protected assets from S3. If IAM credentials are not successfully fetched, Ignition will attempt to fetch the file with no credentials.
 
+## HTTP headers
+
+When fetching data from an HTTP URL for config references, CA references and file contents, additional headers can be attached to the request using the `httpHeaders` attribute. This allows downloading data from servers that require authentication or some additional parameters from your request.
+
+Headers can be attached only when `source` has `http` or `https` scheme.
+
+If multiple values are to be set for the same header, they must be separated by a comma. Example: `["Accept", "text/html, application/json"]`.
+
+If the remote HTTP server returns a redirect status code (3xx), then additional headers are not included in the redirected request.
 
 ## Filesystem-Reuse Semantics
 
@@ -100,3 +109,9 @@ Since files, directories, and links all describe filesystem entries can conflict
 A child config can specify children of its own. Those children are merged into their parent config before that config is merged into its own parent. If a config specifies multiple children, those children are merged in the order they appear.
 
 [config-spec]: configuration-v3_0.md
+
+### HTTP headers merging
+
+If names of the parent and child headers match, the result will be to replace the value of the parent header with that of the child.
+
+If the child's header has no value, the parent header with that name will be excluded from the result.
