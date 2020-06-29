@@ -29,7 +29,7 @@ func (s *stage) createUnits(config types.Config) error {
 		if err := s.writeSystemdUnit(unit, false); err != nil {
 			return err
 		}
-		if unit.Enable {
+		if unit.Enabled == nil && unit.Enable {
 			s.Logger.Warning("the enable field has been deprecated in favor of enabled")
 			if err := s.Logger.LogOp(
 				func() error { return s.EnableUnit(unit) },
